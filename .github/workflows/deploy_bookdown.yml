@@ -16,8 +16,36 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
         with:
           r-version: '3.6.3'
+      - name: Install tinytex
+        run: install.packages("tinytex")
+        shell: Rscript {0}
       - uses: foxsen/actions/setup-tinytex-new@tinytex-v2
         with:
-          cache-version: 5
-    
- 
+          cache-version: 6
+      - name: Get R and OS version
+        id: get-version
+        run: |
+          cat("##[set-output name=os-version;]", sessionInfo()$running, "\n", sep = "")
+          cat("##[set-output name=r-version;]", R.Version()$version.string, sep = "")
+        shell: Rscript {0}
+      - name: Restore TinyTex cache
+        uses: actions/cache@v2
+        id: tinytex-cache
+        with:
+          path: |
+            ~/.TinyTex
+            ~/bin
+          key: ${{ steps.get-version.outputs.os-version }}-${{ steps.get-version.outputs.r-version }}-${{inputs.cache-version }}-1
+
+      - name: install TinyTex
+        run: | 
+          if echo ${{steps.tinytex-cache.outputs.cache-hit}} | grep -c "true"
+          then 
+            echo "cache hit"
+          else
+            echo "cache miss"
+            Rscript -e "tinytex::install_tinytex()"
+          fi
+          if test -d ~/bin ;  then echo "~/bin exist"; else echo "~/bin not exist"; fi
+          if test -d ~/.TinyTex ;  then echo "~/.TinyTex exist"; else echo "~/.TinyTex not exist"; fi
+        shell: bash
