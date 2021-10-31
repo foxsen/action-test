@@ -32,17 +32,9 @@ jobs:
           path: |
             ~/.TinyTeX
             ~/bin
-          key: ${{ steps.get-version.outputs.os-version }}-${{ steps.get-version.outputs.r-version }}-3-1
+          key: ${{ steps.get-version.outputs.os-version }}-${{ steps.get-version.outputs.r-version }}-4-1
 
       - name: install TinyTex
-        run: | 
-          if echo ${{steps.tinytex-cache.outputs.cache-hit}} | grep -c "true"
-          then 
-            echo "cache hit"
-          else
-            echo "cache miss"
-            Rscript -e "tinytex::install_tinytex()"
-          fi
-          if test -d ~/bin ;  then echo "~/bin exist"; else echo "~/bin not exist"; fi
-          if test -d ~/.TinyTeX ;  then echo "~/.TinyTeX exist"; else echo "~/.TinyTeX not exist"; fi
-        shell: bash
+        if: steps.tinytex-cache.outputs.cache-hit != 'true'
+        run:  tinytex::install_tinytex()
+        shell: Rscript {0}
