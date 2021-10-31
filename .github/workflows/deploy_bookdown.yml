@@ -1,0 +1,23 @@
+on:
+  push:
+     branches:
+       - main
+  pull_request:
+     branches:
+       - main
+
+name: renderbook
+
+jobs:
+  bookdown:
+    name: setup tinytex
+    runs-on: ubuntu-latest
+    steps:
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: '3.6.3'
+      - uses: foxsen/actions/setup-tinytex-new@tinytex-v2
+        with:
+          cache-version: 5
+    
+ 
