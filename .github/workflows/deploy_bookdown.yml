@@ -17,10 +17,11 @@ jobs:
     steps:
       - name: bookdown builder
         run: git pull && make -j 8
-     - name: Deploy to GitHub Pages
-       uses: Cecilapp/GitHub-Pages-deploy@v3
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       with:
-         email: 2503799872@qq.com
-         build_dir: _book/
+
+      - name: Deploy to GitHub Pages
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          email: 2503799872@qq.com
+          build_dir: _book/
