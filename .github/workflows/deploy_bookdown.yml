@@ -16,7 +16,7 @@ jobs:
       image: foxsen76/archbase-builder:latest
     steps:
       - name: bookdown builder
-        run: git pull && make -j 8
+        run: cd /opt/archbase && git pull && make -j 8
 
       - name: Deploy to GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
