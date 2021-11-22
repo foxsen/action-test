@@ -10,31 +10,17 @@ name: renderbook
 
 jobs:
   bookdown:
-    name: setup tinytex
+    name: Render-Book
     runs-on: ubuntu-latest
+    container: 
+      image: foxsen76/archbase-builder:latest
     steps:
-      - uses: r-lib/actions/setup-r@v1
-        with:
-          r-version: '3.6.3'
-      - name: Install tinytex
-        run: install.packages("tinytex")
-        shell: Rscript {0}
-      - name: Get R and OS version
-        id: get-version
-        run: |
-          cat("##[set-output name=os-version;]", sessionInfo()$running, "\n", sep = "")
-          cat("##[set-output name=r-version;]", R.Version()$version.string, sep = "")
-        shell: Rscript {0}
-      - name: Restore TinyTex cache
-        uses: actions/cache@v2
-        id: tinytex-cache
-        with:
-          path: |
-            ~/.TinyTeX
-            ~/bin
-          key: ${{ steps.get-version.outputs.os-version }}-${{ steps.get-version.outputs.r-version }}-4-1
-
-      - name: install TinyTex
-        if: steps.tinytex-cache.outputs.cache-hit != 'true'
-        run:  tinytex::install_tinytex()
-        shell: Rscript {0}
+      - name: bookdown builder
+        run: git pull && make -j 8
+     - name: Deploy to GitHub Pages
+       uses: Cecilapp/GitHub-Pages-deploy@v3
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+         email: 2503799872@qq.com
+         build_dir: _book/
