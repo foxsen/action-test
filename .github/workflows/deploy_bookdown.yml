@@ -16,7 +16,7 @@ jobs:
       image: foxsen76/archbase-builder:latest
     steps:
       - name: bookdown builder
-        run: cd /opt/archbase && git pull && make -j 8
+        run: cd /opt/archbase && git pull && make -j 8 && cp -a ./_book /github/home/
 
       - name: Deploy to GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
@@ -24,4 +24,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           email: 2503799872@qq.com
-          build_dir: _book/
+          build_dir: /github/home/_book/
